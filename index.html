@@ -30,7 +30,37 @@
     font-size: 16px;
     line-height: 1.6;
     overflow-x: hidden;
+    cursor: none;
   }
+
+  /* CUSTOM CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px;
+    height: 12px;
+    background: var(--orange);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease, width 0.2s ease, height 0.2s ease, opacity 0.2s ease;
+    mix-blend-mode: normal;
+  }
+
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(216,90,48,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+  }
+
+  .cursor.hover { width: 6px; height: 6px; }
+  .cursor-ring.hover { width: 56px; height: 56px; border-color: rgba(216,90,48,0.8); }
 
   /* NAV */
   nav {
@@ -44,6 +74,7 @@
     border-bottom: 0.5px solid rgba(255,255,255,0.1);
     background: rgba(13,13,13,0.9);
     backdrop-filter: blur(8px);
+    transition: border-color 0.3s;
   }
 
   .nav-logo {
@@ -53,13 +84,12 @@
     color: var(--white);
     text-decoration: none;
     text-transform: uppercase;
+    transition: color 0.3s;
   }
 
-  .nav-links {
-    display: flex;
-    gap: 2.5rem;
-    list-style: none;
-  }
+  .nav-logo:hover { color: var(--orange); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
 
   .nav-links a {
     font-size: 13px;
@@ -68,9 +98,20 @@
     letter-spacing: 0.06em;
     text-transform: uppercase;
     transition: color 0.2s;
+    position: relative;
+  }
+
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 0; height: 1px;
+    background: var(--orange);
+    transition: width 0.25s ease;
   }
 
   .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
 
   .nav-cta {
     font-size: 13px;
@@ -78,14 +119,16 @@
     border: 0.5px solid rgba(255,255,255,0.4);
     padding: 0.5rem 1.25rem;
     border-radius: 2px;
-    transition: background 0.2s, border-color 0.2s !important;
+    transition: background 0.2s, border-color 0.2s, color 0.2s !important;
   }
 
   .nav-cta:hover {
-    background: rgba(255,255,255,0.08) !important;
-    border-color: rgba(255,255,255,0.7) !important;
+    background: var(--orange) !important;
+    border-color: var(--orange) !important;
     color: var(--white) !important;
   }
+
+  .nav-cta::after { display: none !important; }
 
   /* HERO */
   .hero {
@@ -103,6 +146,7 @@
     inset: 0;
     background: radial-gradient(ellipse 70% 60% at 70% 40%, #D85A30 0%, #993C1D 35%, #1a0a05 65%, #0D0D0D 100%);
     z-index: 0;
+    transition: transform 0.1s ease-out;
   }
 
   .hero-overlay {
@@ -127,6 +171,9 @@
     display: flex;
     align-items: center;
     gap: 1rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.2s forwards;
   }
 
   .hero-eyebrow::before {
@@ -144,6 +191,18 @@
     letter-spacing: -0.02em;
     text-transform: uppercase;
     margin-bottom: 2rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeUp 0.9s ease 0.4s forwards;
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 60%, #F0997B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transition: filter 0.3s;
+  }
+
+  .hero-title:hover {
+    filter: drop-shadow(0 0 40px rgba(216,90,48,0.4));
   }
 
   .hero-tagline {
@@ -153,6 +212,9 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
     margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.6s forwards;
   }
 
   .hero-desc {
@@ -161,12 +223,22 @@
     max-width: 520px;
     line-height: 1.75;
     margin-bottom: 2.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.7s forwards;
   }
 
   .hero-actions {
     display: flex;
     gap: 1rem;
     align-items: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
   }
 
   .btn-primary {
@@ -178,13 +250,26 @@
     text-transform: uppercase;
     padding: 0.9rem 2rem;
     border: none;
-    cursor: pointer;
+    cursor: none;
     text-decoration: none;
     display: inline-block;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
   }
 
-  .btn-primary:hover { background: var(--orange-dark); }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .btn-primary:hover { background: var(--orange-dark); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(216,90,48,0.35); }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:active { transform: translateY(0); }
 
   .btn-ghost {
     color: rgba(255,255,255,0.6);
@@ -195,27 +280,14 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    transition: color 0.2s;
+    transition: color 0.2s, gap 0.2s;
+    cursor: none;
   }
 
-  .btn-ghost:hover { color: var(--white); }
-
-  .hero-corner {
-    position: absolute;
-    top: 2rem;
-    right: 2rem;
-    z-index: 2;
-    width: 28px;
-    height: 28px;
-    opacity: 0.4;
-  }
+  .btn-ghost:hover { color: var(--white); gap: 0.8rem; }
 
   /* DIVIDER */
-  .divider {
-    width: 100%;
-    height: 0.5px;
-    background: rgba(255,255,255,0.1);
-  }
+  .divider { width: 100%; height: 0.5px; background: rgba(255,255,255,0.1); }
 
   /* SECTIONS */
   section { padding: 6rem 3rem; }
@@ -241,7 +313,20 @@
     opacity: 0.5;
   }
 
-  /* HOOK SECTION */
+  /* SCROLL REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+  .reveal-delay-1 { transition-delay: 0.1s; }
+  .reveal-delay-2 { transition-delay: 0.2s; }
+  .reveal-delay-3 { transition-delay: 0.3s; }
+  .reveal-delay-4 { transition-delay: 0.4s; }
+
+  /* HOOK */
   .hook {
     background: var(--black);
     display: grid;
@@ -258,7 +343,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: transform 0.4s ease;
   }
+
+  .hook-image:hover { transform: scale(1.02); }
 
   .hook-image-overlay {
     position: absolute;
@@ -290,13 +378,7 @@
     line-height: 1.8;
   }
 
-  .hook-stat strong {
-    display: block;
-    font-size: 32px;
-    font-weight: 600;
-    color: var(--orange);
-    letter-spacing: -0.01em;
-  }
+  .hook-stat strong { display: block; font-size: 32px; font-weight: 600; color: var(--orange); letter-spacing: -0.01em; }
 
   .hook-text h2 {
     font-size: clamp(28px, 4vw, 48px);
@@ -305,33 +387,24 @@
     letter-spacing: -0.01em;
     line-height: 1.05;
     margin-bottom: 1.5rem;
+    transition: color 0.3s;
+    cursor: default;
   }
 
-  .hook-text p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.8;
-    margin-bottom: 1rem;
+  .hook-text h2:hover {
+    background: linear-gradient(135deg, #ffffff 0%, #F0997B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
   }
 
-  .hook-text .emphasis {
-    color: var(--white);
-    font-style: italic;
-  }
+  .hook-text p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 1rem; }
+  .hook-text .emphasis { color: var(--white); font-style: italic; }
 
   /* WHAT WE DO */
-  .what-we-do {
-    background: var(--off-white);
-    color: var(--black);
-  }
-
-  .what-we-do .section-label {
-    color: var(--orange-dark);
-  }
-
-  .what-we-do .section-label::after {
-    background: var(--orange-dark);
-  }
+  .what-we-do { background: var(--off-white); color: var(--black); }
+  .what-we-do .section-label { color: var(--orange-dark); }
+  .what-we-do .section-label::after { background: var(--orange-dark); }
 
   .wwd-headline {
     font-size: clamp(32px, 5vw, 64px);
@@ -341,7 +414,11 @@
     line-height: 1.0;
     margin-bottom: 3rem;
     max-width: 700px;
+    cursor: default;
+    transition: color 0.3s;
   }
+
+  .wwd-headline:hover { color: var(--orange-dark); }
 
   .wwd-grid {
     display: grid;
@@ -355,33 +432,23 @@
   .wwd-cell {
     background: var(--off-white);
     padding: 2rem 1.5rem;
+    transition: background 0.25s, transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+
+  .wwd-cell:hover {
+    background: var(--white);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+    z-index: 2;
     position: relative;
   }
 
-  .wwd-cell:hover { background: #ece9e3; }
+  .wwd-cell:hover .wwd-num { color: var(--orange); }
 
-  .wwd-num {
-    font-size: 11px;
-    font-weight: 600;
-    color: var(--orange);
-    letter-spacing: 0.1em;
-    margin-bottom: 0.75rem;
-  }
-
-  .wwd-title {
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--black);
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
-  .wwd-desc {
-    font-size: 13px;
-    color: var(--gray-mid);
-    line-height: 1.65;
-  }
+  .wwd-num { font-size: 11px; font-weight: 600; color: var(--orange-dark); letter-spacing: 0.1em; margin-bottom: 0.75rem; transition: color 0.2s; }
+  .wwd-title { font-size: 15px; font-weight: 500; color: var(--black); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.02em; }
+  .wwd-desc { font-size: 13px; color: var(--gray-mid); line-height: 1.65; }
 
   .spotlight-block {
     margin-top: 4rem;
@@ -392,31 +459,24 @@
     grid-template-columns: 1fr 1fr;
     gap: 3rem;
     align-items: center;
+    transition: background 0.3s;
   }
+
+  .spotlight-block:hover { background: #111; }
 
   .spotlight-quote {
     font-size: clamp(18px, 2.5vw, 28px);
     font-weight: 300;
     line-height: 1.5;
     letter-spacing: 0.01em;
+    cursor: default;
   }
 
-  .spotlight-quote em {
-    font-style: normal;
-    color: var(--orange);
-    font-weight: 500;
-  }
-
-  .spotlight-detail {
-    font-size: 14px;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.8;
-  }
+  .spotlight-quote em { font-style: normal; color: var(--orange); font-weight: 500; }
+  .spotlight-detail { font-size: 14px; color: rgba(255,255,255,0.55); line-height: 1.8; }
 
   /* PROBLEM */
-  .problem {
-    background: var(--black);
-  }
+  .problem { background: var(--black); }
 
   .problem-headline {
     font-size: clamp(36px, 6vw, 80px);
@@ -426,6 +486,12 @@
     line-height: 0.95;
     margin-bottom: 4rem;
     max-width: 800px;
+    cursor: default;
+    transition: filter 0.3s;
+  }
+
+  .problem-headline:hover {
+    filter: drop-shadow(0 0 30px rgba(216,90,48,0.25));
   }
 
   .problem-grid {
@@ -439,25 +505,17 @@
     padding: 2rem 1.5rem;
     border-right: 0.5px solid rgba(255,255,255,0.1);
     position: relative;
+    transition: background 0.25s;
+    cursor: default;
   }
 
   .problem-cell:last-child { border-right: none; }
 
-  .problem-num {
-    font-size: 36px;
-    font-weight: 600;
-    color: var(--orange);
-    margin-bottom: 0.75rem;
-    letter-spacing: -0.02em;
-  }
+  .problem-cell:hover { background: rgba(216,90,48,0.05); }
+  .problem-cell:hover .problem-num { color: var(--orange-light); }
 
-  .problem-label {
-    font-size: 13px;
-    color: rgba(255,255,255,0.5);
-    line-height: 1.6;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
+  .problem-num { font-size: 36px; font-weight: 600; color: var(--orange); margin-bottom: 0.75rem; letter-spacing: -0.02em; transition: color 0.2s; }
+  .problem-label { font-size: 13px; color: rgba(255,255,255,0.5); line-height: 1.6; text-transform: uppercase; letter-spacing: 0.04em; }
 
   .problem-statement {
     margin-top: 4rem;
@@ -468,30 +526,13 @@
     gap: 4rem;
   }
 
-  .problem-statement p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.8;
-  }
-
-  .problem-statement p strong {
-    color: var(--white);
-    font-weight: 400;
-  }
+  .problem-statement p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.8; }
+  .problem-statement p strong { color: var(--white); font-weight: 400; }
 
   /* SOLUTION */
-  .solution {
-    background: var(--orange);
-    color: var(--white);
-  }
-
-  .solution .section-label {
-    color: rgba(255,255,255,0.7);
-  }
-
-  .solution .section-label::after {
-    background: rgba(255,255,255,0.4);
-  }
+  .solution { background: var(--orange); color: var(--white); }
+  .solution .section-label { color: rgba(255,255,255,0.7); }
+  .solution .section-label::after { background: rgba(255,255,255,0.4); }
 
   .solution-headline {
     font-size: clamp(36px, 5.5vw, 72px);
@@ -500,7 +541,11 @@
     letter-spacing: -0.02em;
     line-height: 0.95;
     margin-bottom: 3rem;
+    cursor: default;
+    transition: filter 0.3s;
   }
+
+  .solution-headline:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.3)); }
 
   .solution-grid {
     display: grid;
@@ -514,42 +559,32 @@
   .sol-cell {
     background: var(--orange);
     padding: 2.5rem 2rem;
-    transition: background 0.2s;
+    transition: background 0.25s, transform 0.25s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sol-cell::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 0; height: 2px;
+    background: rgba(255,255,255,0.5);
+    transition: width 0.35s ease;
   }
 
   .sol-cell:hover { background: var(--orange-dark); }
+  .sol-cell:hover::before { width: 100%; }
 
-  .sol-num {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.5);
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-  }
-
-  .sol-title {
-    font-size: 18px;
-    font-weight: 500;
-    margin-bottom: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.02em;
-  }
-
-  .sol-desc {
-    font-size: 14px;
-    color: rgba(255,255,255,0.7);
-    line-height: 1.7;
-  }
+  .sol-num { font-size: 11px; letter-spacing: 0.12em; color: rgba(255,255,255,0.5); margin-bottom: 0.75rem; text-transform: uppercase; }
+  .sol-title { font-size: 18px; font-weight: 500; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.02em; }
+  .sol-desc { font-size: 14px; color: rgba(255,255,255,0.7); line-height: 1.7; }
 
   /* VISION */
-  .vision {
-    background: var(--black);
-  }
+  .vision { background: var(--black); }
 
-  .vision-intro {
-    max-width: 600px;
-    margin-bottom: 4rem;
-  }
+  .vision-intro { max-width: 600px; margin-bottom: 4rem; }
 
   .vision-intro h2 {
     font-size: clamp(28px, 4vw, 52px);
@@ -558,13 +593,13 @@
     line-height: 1.05;
     letter-spacing: -0.01em;
     margin-bottom: 1.5rem;
+    cursor: default;
+    transition: filter 0.3s;
   }
 
-  .vision-intro p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.8;
-  }
+  .vision-intro h2:hover { filter: drop-shadow(0 0 24px rgba(216,90,48,0.35)); }
+
+  .vision-intro p { font-size: 16px; color: rgba(255,255,255,0.6); line-height: 1.8; }
 
   .vision-grid {
     display: grid;
@@ -576,37 +611,31 @@
   .vision-cell {
     padding: 2rem 1.5rem;
     border-right: 0.5px solid rgba(255,255,255,0.1);
+    transition: background 0.25s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
   }
 
+  .vision-cell::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 0;
+    background: linear-gradient(to bottom, rgba(216,90,48,0.08), transparent);
+    transition: height 0.35s ease;
+  }
+
+  .vision-cell:hover::after { height: 100%; }
   .vision-cell:last-child { border-right: none; }
+  .vision-cell:hover .vision-stat { color: var(--orange-light); }
 
-  .vision-stat {
-    font-size: 28px;
-    font-weight: 600;
-    color: var(--orange);
-    margin-bottom: 0.5rem;
-    letter-spacing: -0.01em;
-  }
-
-  .vision-title {
-    font-size: 12px;
-    font-weight: 500;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: rgba(255,255,255,0.9);
-    margin-bottom: 0.5rem;
-  }
-
-  .vision-desc {
-    font-size: 13px;
-    color: rgba(255,255,255,0.45);
-    line-height: 1.6;
-  }
+  .vision-stat { font-size: 28px; font-weight: 600; color: var(--orange); margin-bottom: 0.5rem; letter-spacing: -0.01em; transition: color 0.2s; position: relative; z-index: 1; }
+  .vision-title { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: rgba(255,255,255,0.9); margin-bottom: 0.5rem; position: relative; z-index: 1; }
+  .vision-desc { font-size: 13px; color: rgba(255,255,255,0.45); line-height: 1.6; position: relative; z-index: 1; }
 
   /* TIMELINE */
-  .timeline {
-    background: var(--gray-dark);
-  }
+  .timeline { background: var(--gray-dark); }
 
   .timeline-headline {
     font-size: clamp(28px, 4vw, 48px);
@@ -616,7 +645,11 @@
     line-height: 1.05;
     margin-bottom: 4rem;
     max-width: 600px;
+    cursor: default;
+    transition: filter 0.3s;
   }
+
+  .timeline-headline:hover { filter: drop-shadow(0 0 24px rgba(216,90,48,0.3)); }
 
   .timeline-grid {
     display: grid;
@@ -629,49 +662,29 @@
     padding: 2.5rem 2rem;
     border-right: 0.5px solid rgba(255,255,255,0.1);
     position: relative;
+    transition: background 0.25s;
+    cursor: default;
+    overflow: hidden;
   }
 
+  .tl-cell::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 2px; height: 0;
+    background: var(--orange);
+    transition: height 0.4s ease;
+  }
+
+  .tl-cell:hover { background: rgba(255,255,255,0.03); }
+  .tl-cell:hover::before { height: 100%; }
   .tl-cell:last-child { border-right: none; }
 
-  .tl-arrow {
-    font-size: 11px;
-    letter-spacing: 0.12em;
-    color: var(--orange);
-    text-transform: uppercase;
-    margin-bottom: 0.5rem;
-  }
-
-  .tl-phase {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.35);
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-  }
-
-  .tl-period {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--white);
-    margin-bottom: 1rem;
-    letter-spacing: -0.01em;
-  }
-
-  .tl-desc {
-    font-size: 13px;
-    color: rgba(255,255,255,0.55);
-    line-height: 1.7;
-    margin-bottom: 1.25rem;
-  }
-
-  .tl-goal {
-    font-size: 12px;
-    color: var(--orange);
-    font-style: italic;
-    line-height: 1.5;
-    border-top: 0.5px solid rgba(255,255,255,0.08);
-    padding-top: 1rem;
-  }
+  .tl-arrow { font-size: 11px; letter-spacing: 0.12em; color: var(--orange); text-transform: uppercase; margin-bottom: 0.5rem; }
+  .tl-phase { font-size: 11px; letter-spacing: 0.1em; color: rgba(255,255,255,0.35); text-transform: uppercase; margin-bottom: 0.25rem; }
+  .tl-period { font-size: 20px; font-weight: 500; color: var(--white); margin-bottom: 1rem; letter-spacing: -0.01em; }
+  .tl-desc { font-size: 13px; color: rgba(255,255,255,0.55); line-height: 1.7; margin-bottom: 1.25rem; }
+  .tl-goal { font-size: 12px; color: var(--orange); font-style: italic; line-height: 1.5; border-top: 0.5px solid rgba(255,255,255,0.08); padding-top: 1rem; }
 
   .timeline-statement {
     margin-top: 3rem;
@@ -699,7 +712,10 @@
     display: flex;
     align-items: flex-end;
     padding: 2rem;
+    transition: filter 0.4s;
   }
+
+  .origins-image:hover { filter: brightness(1.1); }
 
   .origins-image-quote {
     font-size: 14px;
@@ -717,14 +733,13 @@
     letter-spacing: -0.01em;
     line-height: 1.05;
     margin-bottom: 2rem;
+    cursor: default;
+    transition: filter 0.3s;
   }
 
-  .origins-text p {
-    font-size: 16px;
-    color: rgba(255,255,255,0.65);
-    line-height: 1.8;
-    margin-bottom: 1.25rem;
-  }
+  .origins-text h2:hover { filter: drop-shadow(0 0 20px rgba(216,90,48,0.3)); }
+
+  .origins-text p { font-size: 16px; color: rgba(255,255,255,0.65); line-height: 1.8; margin-bottom: 1.25rem; }
 
   .origins-text .belonging {
     font-size: 20px;
@@ -734,7 +749,11 @@
     margin-top: 2rem;
     padding-top: 2rem;
     border-top: 0.5px solid rgba(255,255,255,0.1);
+    transition: color 0.3s;
+    cursor: default;
   }
+
+  .origins-text .belonging:hover { color: var(--orange-light); }
 
   /* CONTACT */
   .contact {
@@ -753,17 +772,13 @@
     text-transform: uppercase;
     letter-spacing: -0.02em;
     line-height: 0.9;
+    cursor: default;
+    transition: filter 0.3s;
   }
 
-  .contact-tagline {
-    font-size: 12px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.6);
-    margin-top: 1.5rem;
-  }
+  .contact-headline:hover { filter: drop-shadow(0 0 30px rgba(255,255,255,0.25)); }
 
-  .contact-details { }
+  .contact-tagline { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.6); margin-top: 1.5rem; }
 
   .contact-item {
     display: flex;
@@ -776,21 +791,17 @@
 
   .contact-item:last-child { border-bottom: none; margin-bottom: 0; }
 
-  .contact-type {
-    font-size: 11px;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: rgba(255,255,255,0.5);
-  }
+  .contact-type { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.5); }
 
   .contact-value {
     font-size: 16px;
     color: var(--white);
     text-decoration: none;
-    transition: opacity 0.2s;
+    transition: opacity 0.2s, letter-spacing 0.2s;
+    display: inline-block;
   }
 
-  .contact-value:hover { opacity: 0.7; }
+  .contact-value:hover { opacity: 0.7; letter-spacing: 0.03em; }
 
   /* FOOTER */
   footer {
@@ -808,28 +819,17 @@
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: rgba(255,255,255,0.4);
+    transition: color 0.2s;
+    cursor: default;
   }
 
-  .footer-copy {
-    font-size: 12px;
-    color: rgba(255,255,255,0.25);
-    letter-spacing: 0.04em;
-  }
+  .footer-logo:hover { color: var(--orange); }
 
-  /* CORNER MARK */
-  .corner-mark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    border: 0.5px solid rgba(255,255,255,0.3);
-    font-size: 14px;
-    color: rgba(255,255,255,0.4);
-    flex-shrink: 0;
-  }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.25); letter-spacing: 0.04em; }
 
   @media (max-width: 768px) {
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
     section { padding: 4rem 1.5rem; }
@@ -845,6 +845,9 @@
 </head>
 <body>
 
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
 <nav>
   <a href="#" class="nav-logo">Metaxis</a>
   <ul class="nav-links">
@@ -858,7 +861,7 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-bg"></div>
+  <div class="hero-bg" id="heroBg"></div>
   <div class="hero-overlay"></div>
   <div class="hero-content">
     <p class="hero-eyebrow">Directional audio experience</p>
@@ -876,7 +879,7 @@
 
 <!-- HOOK -->
 <section class="hook" id="hook">
-  <div class="hook-image">
+  <div class="hook-image reveal">
     <span class="hook-image-text">Just<br>imagine</span>
     <div class="hook-stat">
       <strong>80%</strong>
@@ -885,11 +888,11 @@
     <div class="hook-image-overlay"></div>
   </div>
   <div class="hook-text">
-    <p class="section-label">The reality</p>
-    <h2>They can see the art.<br>But they can't hear the story.</h2>
-    <p>Imagine visiting a museum with someone who doesn't speak English. Right now, the best we offer them is a heavy headset, a queue, and three language options.</p>
-    <p class="emphasis">That's the problem. And that's why Metaxis exists.</p>
-    <p style="margin-top: 1.5rem; font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7;">1.5 billion people speak English worldwide — meaning over 80% of the global population doesn't. So it's highly likely you have visitors right now who are missing the story.</p>
+    <p class="section-label reveal">The reality</p>
+    <h2 class="reveal reveal-delay-1">They can see the art.<br>But they can't hear the story.</h2>
+    <p class="reveal reveal-delay-2">Imagine visiting a museum with someone who doesn't speak English. Right now, the best we offer them is a heavy headset, a queue, and three language options.</p>
+    <p class="emphasis reveal reveal-delay-3">That's the problem. And that's why Metaxis exists.</p>
+    <p class="reveal reveal-delay-4" style="margin-top: 1.5rem; font-size: 14px; color: rgba(255,255,255,0.4); line-height: 1.7;">1.5 billion people speak English worldwide — meaning over 80% of the global population doesn't. So it's highly likely you have visitors right now who are missing the story.</p>
   </div>
 </section>
 
@@ -897,33 +900,33 @@
 
 <!-- WHAT WE DO -->
 <section class="what-we-do" id="what-we-do">
-  <p class="section-label" style="color: var(--orange-dark);">What we do</p>
-  <h2 class="wwd-headline">Every visitor.<br>Every moment.<br>Every story.</h2>
+  <p class="section-label reveal" style="color: var(--orange-dark);">What we do</p>
+  <h2 class="wwd-headline reveal">Every visitor.<br>Every moment.<br>Every story.</h2>
 
   <div class="wwd-grid">
-    <div class="wwd-cell">
+    <div class="wwd-cell reveal">
       <p class="wwd-num">01</p>
       <p class="wwd-title">Adaptive & dynamic</p>
       <p class="wwd-desc">Custom-built systems that respond to each venue's unique architecture and visitor flow.</p>
     </div>
-    <div class="wwd-cell">
+    <div class="wwd-cell reveal reveal-delay-1">
       <p class="wwd-num">02</p>
       <p class="wwd-title">Simultaneous audio zones</p>
       <p class="wwd-desc">Multiple independent sound zones, each with their own content, language and level — all at once.</p>
     </div>
-    <div class="wwd-cell">
+    <div class="wwd-cell reveal reveal-delay-2">
       <p class="wwd-num">03</p>
       <p class="wwd-title">Full package</p>
       <p class="wwd-desc">Consultancy, creation and installation — end to end, without compromise.</p>
     </div>
-    <div class="wwd-cell">
+    <div class="wwd-cell reveal reveal-delay-3">
       <p class="wwd-num">04</p>
       <p class="wwd-title">Updatable content</p>
       <p class="wwd-desc">An easy-to-use backend that lets venues update and manage their content themselves.</p>
     </div>
   </div>
 
-  <div class="spotlight-block">
+  <div class="spotlight-block reveal">
     <p class="spotlight-quote">Conventional speakers are like a <em>floodlight.</em> Metaxis is a <em>spotlight.</em> Precise, targeted, and fully in control — every seat, the best seat.</p>
     <p class="spotlight-detail">Our technology steers sound precisely — horizontally and vertically — creating multiple independent zones in one room, simultaneously. Different content. Different languages. No bleed between zones. What you hear matches what you see.</p>
   </div>
@@ -933,31 +936,31 @@
 
 <!-- PROBLEM -->
 <section class="problem" id="problem">
-  <p class="section-label">The problem</p>
-  <h2 class="problem-headline">Convenience is not the same as care.</h2>
+  <p class="section-label reveal">The problem</p>
+  <h2 class="problem-headline reveal">Convenience is not the same as care.</h2>
 
   <div class="problem-grid">
-    <div class="problem-cell">
+    <div class="problem-cell reveal">
       <p class="problem-num">1</p>
       <p class="problem-label">Outdated technology.<br>Not future thinking.</p>
     </div>
-    <div class="problem-cell">
+    <div class="problem-cell reveal reveal-delay-1">
       <p class="problem-num">2</p>
       <p class="problem-label">They accommodate.<br>They do not include.</p>
     </div>
-    <div class="problem-cell">
+    <div class="problem-cell reveal reveal-delay-2">
       <p class="problem-num">3</p>
       <p class="problem-label">Nobody in the industry<br>offers everything.</p>
     </div>
-    <div class="problem-cell">
+    <div class="problem-cell reveal reveal-delay-3">
       <p class="problem-num">4</p>
       <p class="problem-label">Default visitor rather<br>than every individual.</p>
     </div>
   </div>
 
   <div class="problem-statement">
-    <p>The technology exists. The intention is there. <strong>But the execution is stuck.</strong> Consultants don't create, creators don't consult, and builders don't systematise. Nobody is currently doing it all.</p>
-    <p>The industry is still designing for a <strong>default visitor</strong> — and that means millions of people are left out of spaces built for everyone. Inclusive design isn't just the right thing to do. It's the smart thing to do.</p>
+    <p class="reveal">The technology exists. The intention is there. <strong>But the execution is stuck.</strong> Consultants don't create, creators don't consult, and builders don't systematise. Nobody is currently doing it all.</p>
+    <p class="reveal reveal-delay-1">The industry is still designing for a <strong>default visitor</strong> — and that means millions of people are left out of spaces built for everyone. Inclusive design isn't just the right thing to do. It's the smart thing to do.</p>
   </div>
 </section>
 
@@ -965,26 +968,26 @@
 
 <!-- SOLUTION -->
 <section class="solution" id="solution">
-  <p class="section-label">The solution</p>
-  <h2 class="solution-headline">The space responds to whoever walks through the door.</h2>
+  <p class="section-label reveal">The solution</p>
+  <h2 class="solution-headline reveal">The space responds to whoever walks through the door.</h2>
 
   <div class="solution-grid">
-    <div class="sol-cell">
+    <div class="sol-cell reveal">
       <p class="sol-num">Adaptive</p>
       <p class="sol-title">Custom-built systems</p>
       <p class="sol-desc">Every Metaxis installation is built entirely around the specific needs of the venue and its visitors. No off-the-shelf. No compromise.</p>
     </div>
-    <div class="sol-cell">
+    <div class="sol-cell reveal reveal-delay-1">
       <p class="sol-num">Personalised</p>
       <p class="sol-title">Individual sound zones</p>
       <p class="sol-desc">Multiple personalised audio zones operating simultaneously — each with different content, languages and levels, without disturbing anyone around you.</p>
     </div>
-    <div class="sol-cell">
+    <div class="sol-cell reveal reveal-delay-2">
       <p class="sol-num">Complete</p>
       <p class="sol-title">Consultancy to installation</p>
       <p class="sol-desc">We offer the full package — from initial consultancy and creative development through to build, installation and scaling. We join up the dots nobody else will.</p>
     </div>
-    <div class="sol-cell">
+    <div class="sol-cell reveal reveal-delay-3">
       <p class="sol-num">Updatable</p>
       <p class="sol-title">Managed content system</p>
       <p class="sol-desc">A simple backend that lets venues update, adapt and manage their audio content with ease — keeping the experience current, relevant and always evolving.</p>
@@ -997,28 +1000,28 @@
 <!-- VISION -->
 <section class="vision" id="vision">
   <div class="vision-intro">
-    <p class="section-label">Vision</p>
-    <h2>What does the future hold?</h2>
-    <p>Inclusive design isn't just the right thing to do. It's the smart thing to do. There's a proven link between accessibility, audience engagement and profitability.</p>
+    <p class="section-label reveal">Vision</p>
+    <h2 class="reveal">What does the future hold?</h2>
+    <p class="reveal reveal-delay-1">Inclusive design isn't just the right thing to do. It's the smart thing to do. There's a proven link between accessibility, audience engagement and profitability.</p>
   </div>
 
   <div class="vision-grid">
-    <div class="vision-cell">
+    <div class="vision-cell reveal">
       <p class="vision-stat">14M</p>
       <p class="vision-title">Increased footfall</p>
       <p class="vision-desc">1 in 5 people in the UK has a disability — 14 million potential visitors currently underserved.</p>
     </div>
-    <div class="vision-cell">
+    <div class="vision-cell reveal reveal-delay-1">
       <p class="vision-stat">86%</p>
       <p class="vision-title">Spend more</p>
       <p class="vision-desc">86% of disabled consumers say they'd spend more at accessible businesses.</p>
     </div>
-    <div class="vision-cell">
+    <div class="vision-cell reveal reveal-delay-2">
       <p class="vision-stat">$30bn</p>
       <p class="vision-title">Tech advancement</p>
       <p class="vision-desc">Spatial audio is projected to reach $30bn by 2031. We're building at exactly the right moment.</p>
     </div>
-    <div class="vision-cell">
+    <div class="vision-cell reveal reveal-delay-3">
       <p class="vision-stat">£18.4bn</p>
       <p class="vision-title">Cultural growth</p>
       <p class="vision-desc">Cultural tourism generates £18.4bn annually in the UK alone — and accessible venues are better placed to capture it.</p>
@@ -1030,25 +1033,25 @@
 
 <!-- TIMELINE -->
 <section class="timeline" id="timeline">
-  <p class="section-label">Timeline</p>
-  <h2 class="timeline-headline">A single venue becomes a template.<br>A template becomes a licence.<br>A licence becomes a standard.</h2>
+  <p class="section-label reveal">Timeline</p>
+  <h2 class="timeline-headline reveal">A single venue becomes a template.<br>A template becomes a licence.<br>A licence becomes a standard.</h2>
 
   <div class="timeline-grid">
-    <div class="tl-cell">
+    <div class="tl-cell reveal">
       <p class="tl-arrow">↗ Phase 01</p>
       <p class="tl-phase">Now seeking investment</p>
       <p class="tl-period">Months 1–12</p>
       <p class="tl-desc">Language R&D, safeguarding and pilot delivery. One venue. One proof of concept. No device in hand.</p>
       <p class="tl-goal">Redefine the industry standard for inclusive design</p>
     </div>
-    <div class="tl-cell">
+    <div class="tl-cell reveal reveal-delay-1">
       <p class="tl-arrow">↗ Phase 02</p>
       <p class="tl-phase">Expansion</p>
       <p class="tl-period">Months 12–24</p>
       <p class="tl-desc">More venues. More partners. A stronger, smarter system that gathers real-time feedback and refines the model.</p>
       <p class="tl-goal">Build the economic case for belonging</p>
     </div>
-    <div class="tl-cell">
+    <div class="tl-cell reveal reveal-delay-2">
       <p class="tl-arrow">↗ Phase 03</p>
       <p class="tl-phase">Scale</p>
       <p class="tl-period">Months 24–36</p>
@@ -1057,22 +1060,22 @@
     </div>
   </div>
 
-  <p class="timeline-statement">"We're currently in conversations and developing strong partnerships with R&D collaborators and venues."</p>
+  <p class="timeline-statement reveal">"We're currently in conversations and developing strong partnerships with R&D collaborators and venues."</p>
 </section>
 
 <div class="divider"></div>
 
 <!-- ORIGINS -->
 <section class="origins" id="origins">
-  <div class="origins-image">
+  <div class="origins-image reveal">
     <p class="origins-image-quote">"I built Metaxis from lived experience — the frustration of watching someone feel shut out of a space that was supposed to be for everyone."</p>
   </div>
   <div class="origins-text">
-    <p class="section-label">Origins</p>
-    <h2>Why I built this</h2>
-    <p>I'm Caitríona — a creative technologist with a background in immersive experience design. Metaxis was born from a belief that every space should work for everyone, not just those it was designed for by default.</p>
-    <p>With insider expertise in creative technology and immersive experience — from concept to installation — and backed by senior advisors and specialist collaborators, we are ready to build.</p>
-    <p class="belonging">Not just access.<br>But belonging.</p>
+    <p class="section-label reveal">Origins</p>
+    <h2 class="reveal">Why I built this</h2>
+    <p class="reveal reveal-delay-1">I'm Caitríona — a creative technologist with a background in immersive experience design. Metaxis was born from a belief that every space should work for everyone, not just those it was designed for by default.</p>
+    <p class="reveal reveal-delay-2">With insider expertise in creative technology and immersive experience — from concept to installation — and backed by senior advisors and specialist collaborators, we are ready to build.</p>
+    <p class="belonging reveal reveal-delay-3">Not just access.<br>But belonging.</p>
   </div>
 </section>
 
@@ -1080,11 +1083,11 @@
 
 <!-- CONTACT -->
 <section class="contact" id="contact">
-  <div>
+  <div class="reveal">
     <h2 class="contact-headline">Get<br>in touch.</h2>
     <p class="contact-tagline">Mixing art and science to create magic</p>
   </div>
-  <div class="contact-details">
+  <div class="contact-details reveal reveal-delay-1">
     <div class="contact-item">
       <span class="contact-type">Phone</span>
       <a href="tel:07954576706" class="contact-value">07954 576 706</a>
@@ -1105,5 +1108,50 @@
   <span class="footer-copy">© 2026 Metaxis Studio. All rights reserved.</span>
 </footer>
 
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const hoverEls = document.querySelectorAll('a, button, .wwd-cell, .sol-cell, .problem-cell, .vision-cell, .tl-cell, .btn-primary, .btn-ghost');
+  hoverEls.forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+  });
+
+  const heroBg = document.getElementById('heroBg');
+  document.querySelector('.hero').addEventListener('mousemove', e => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    heroBg.style.transform = `translate(${x * 12}px, ${y * 8}px) scale(1.04)`;
+  });
+  document.querySelector('.hero').addEventListener('mouseleave', () => {
+    heroBg.style.transform = 'translate(0,0) scale(1)';
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) { entry.target.classList.add('visible'); observer.unobserve(entry.target); }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+</script>
 </body>
 </html>
