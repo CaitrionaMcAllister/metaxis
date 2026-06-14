@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Metaxis — FAQ</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --orange: #D85A30;
+    --orange-dark: #993C1D;
+    --orange-light: #F0997B;
+    --black: #0D0D0D;
+    --white: #FFFFFF;
+    --off-white: #F5F3F0;
+    --gray-mid: #888780;
+    --gray-dark: #2C2C2A;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--black);
+    color: var(--white);
+    font-size: 16px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed;
+    width: 12px; height: 12px;
+    background: var(--orange);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(216,90,48,0.5);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s;
+  }
+  .cursor.hover { width: 6px; height: 6px; }
+  .cursor-ring.hover { width: 52px; height: 52px; border-color: rgba(216,90,48,0.8); }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 3rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    background: rgba(13,13,13,0.95);
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-logo {
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--white);
+    text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-logo:hover { color: var(--orange); }
+
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; align-items: center; }
+
+  .nav-links a {
+    font-size: 13px;
+    color: rgba(255,255,255,0.6);
+    text-decoration: none;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 0; height: 1px;
+    background: var(--orange);
+    transition: width 0.25s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-links a:hover::after { width: 100%; }
+
+  .nav-active { color: var(--white) !important; }
+  .nav-active::after { width: 100% !important; background: var(--orange) !important; }
+
+  .nav-cta {
+    color: var(--white) !important;
+    border: 0.5px solid rgba(255,255,255,0.4);
+    padding: 0.5rem 1.25rem;
+    border-radius: 2px;
+    transition: background 0.2s, border-color 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--orange) !important; border-color: var(--orange) !important; }
+  .nav-cta::after { display: none !important; }
+
+  /* HERO */
+  .faq-hero {
+    padding: 10rem 3rem 4rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .faq-hero::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 50%;
+    height: 100%;
+    background: radial-gradient(ellipse 80% 80% at 80% 20%, rgba(216,90,48,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .faq-hero-label {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--orange);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .faq-hero-label::before { content: ''; display: block; width: 32px; height: 0.5px; background: var(--orange); }
+
+  .faq-hero h1 {
+    font-size: clamp(48px, 8vw, 96px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 0.95;
+    margin-bottom: 1.5rem;
+    background: linear-gradient(135deg, #ffffff 0%, #ffffff 55%, #F0997B 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .faq-hero p {
+    font-size: 16px;
+    color: rgba(255,255,255,0.5);
+    max-width: 480px;
+    line-height: 1.75;
+  }
+
+  /* LAYOUT */
+  .faq-layout {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    min-height: 100vh;
+  }
+
+  /* SIDEBAR */
+  .faq-sidebar {
+    position: sticky;
+    top: 72px;
+    height: calc(100vh - 72px);
+    overflow-y: auto;
+    padding: 3rem 2rem 3rem 3rem;
+    border-right: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .sidebar-section {
+    margin-bottom: 2rem;
+  }
+
+  .sidebar-title {
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.25);
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.06);
+  }
+
+  .sidebar-link {
+    display: block;
+    font-size: 13px;
+    color: rgba(255,255,255,0.4);
+    text-decoration: none;
+    padding: 0.35rem 0;
+    transition: color 0.2s, padding-left 0.2s;
+    line-height: 1.4;
+  }
+  .sidebar-link:hover { color: var(--white); padding-left: 4px; }
+  .sidebar-link.active { color: var(--orange); }
+
+  /* MAIN */
+  .faq-main { padding: 3rem 4rem 6rem; }
+
+  /* CATEGORY */
+  .faq-category {
+    margin-bottom: 5rem;
+    scroll-margin-top: 100px;
+  }
+
+  .category-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 0.5px solid rgba(255,255,255,0.1);
+  }
+
+  .category-icon {
+    width: 36px; height: 36px;
+    background: rgba(216,90,48,0.12);
+    border: 0.5px solid rgba(216,90,48,0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .category-title {
+    font-size: 13px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--orange);
+  }
+
+  /* FAQ ITEM */
+  .faq-item {
+    border-bottom: 0.5px solid rgba(255,255,255,0.07);
+    overflow: hidden;
+  }
+
+  .faq-question {
+    width: 100%;
+    background: none;
+    border: none;
+    color: var(--white);
+    text-align: left;
+    padding: 1.5rem 0;
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'Inter', sans-serif;
+    cursor: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    transition: color 0.2s;
+    line-height: 1.4;
+  }
+
+  .faq-question:hover { color: var(--orange-light); }
+
+  .faq-question.open { color: var(--white); }
+
+  .faq-icon {
+    width: 20px; height: 20px;
+    border: 0.5px solid rgba(255,255,255,0.2);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: border-color 0.2s, transform 0.3s, background 0.2s;
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+  }
+
+  .faq-question:hover .faq-icon { border-color: var(--orange); color: var(--orange); }
+  .faq-question.open .faq-icon { background: var(--orange); border-color: var(--orange); color: var(--white); transform: rotate(45deg); }
+
+  .faq-answer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.3s ease;
+  }
+
+  .faq-answer.open { max-height: 600px; }
+
+  .faq-answer-inner {
+    padding: 0 0 2rem;
+    font-size: 15px;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.85;
+  }
+
+  .faq-answer-inner p { margin-bottom: 0.75rem; }
+  .faq-answer-inner p:last-child { margin-bottom: 0; }
+
+  .faq-answer-inner strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  .faq-answer-inner .highlight {
+    display: inline-block;
+    background: rgba(216,90,48,0.12);
+    border-left: 2px solid var(--orange);
+    padding: 0.75rem 1rem;
+    margin: 0.5rem 0;
+    font-size: 14px;
+    color: rgba(255,255,255,0.75);
+    width: 100%;
+  }
+
+  /* REVEAL */
+  .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* FOOTER */
+  .faq-footer {
+    background: var(--orange);
+    padding: 4rem 3rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+  }
+
+  .faq-footer h2 {
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    line-height: 1;
+  }
+
+  .faq-footer p { font-size: 15px; color: rgba(255,255,255,0.7); line-height: 1.7; margin-bottom: 1.5rem; }
+
+  .btn-white {
+    display: inline-block;
+    background: var(--white);
+    color: var(--orange);
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.9rem 2rem;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+  }
+  .btn-white:hover { background: var(--off-white); transform: translateY(-2px); }
+
+  site-footer {
+    display: block;
+    background: var(--black);
+    padding: 2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 0.5px solid rgba(255,255,255,0.08);
+  }
+
+  .footer-logo { font-size: 14px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.4); transition: color 0.2s; cursor: default; }
+  .footer-logo:hover { color: var(--orange); }
+  .footer-copy { font-size: 12px; color: rgba(255,255,255,0.25); letter-spacing: 0.04em; }
+
+  @media (max-width: 768px) {
+    body { cursor: auto; }
+    .cursor, .cursor-ring { display: none; }
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    .faq-hero { padding: 8rem 1.5rem 3rem; }
+    .faq-layout { grid-template-columns: 1fr; }
+    .faq-sidebar { display: none; }
+    .faq-main { padding: 2rem 1.5rem 4rem; }
+    .faq-footer { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 1.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<nav>
+  <a href="index.html" class="nav-logo">Metaxis</a>
+  <ul class="nav-links">
+    <li><a href="index.html#what-we-do">What we do</a></li>
+    <li><a href="index.html#problem">The problem</a></li>
+    <li><a href="index.html#vision">Vision</a></li>
+    <li><a href="index.html#origins">Origins</a></li>
+    <li><a href="faq.html" class="nav-active">FAQ</a></li>
+    <li><a href="index.html#contact" class="nav-cta">Get in touch</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="faq-hero">
+  <p class="faq-hero-label">Questions & answers</p>
+  <h1>Frequently<br>asked.</h1>
+  <p>Everything you need to know about Metaxis — the technology, the business model, and the people behind it.</p>
+</div>
+
+<!-- LAYOUT -->
+<div class="faq-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="faq-sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-title">The technology</p>
+      <a href="#technology" class="sidebar-link">How sound steering works</a>
+      <a href="#technology" class="sidebar-link">Preventing sound bleed</a>
+      <a href="#technology" class="sidebar-link">Prior testing</a>
+      <a href="#technology" class="sidebar-link">Hardware & installation</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">Business model</p>
+      <a href="#business" class="sidebar-link">How we make money</a>
+      <a href="#business" class="sidebar-link">Contract structure</a>
+      <a href="#business" class="sidebar-link">Cost & timelines</a>
+      <a href="#business" class="sidebar-link">Content updates</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">Traction</p>
+      <a href="#traction" class="sidebar-link">Confirmed venues</a>
+      <a href="#traction" class="sidebar-link">Why now</a>
+      <a href="#traction" class="sidebar-link">Programme validation</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">Competition</p>
+      <a href="#competition" class="sidebar-link">Who else is doing this</a>
+      <a href="#competition" class="sidebar-link">Off-the-shelf alternatives</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">The ask</p>
+      <a href="#ask" class="sidebar-link">Why £20,000</a>
+      <a href="#ask" class="sidebar-link">What success looks like</a>
+      <a href="#ask" class="sidebar-link">Route to revenue</a>
+    </div>
+    <div class="sidebar-section">
+      <p class="sidebar-title">The founder</p>
+      <a href="#founder" class="sidebar-link">Why Caitríona</a>
+      <a href="#founder" class="sidebar-link">Technical partnerships</a>
+      <a href="#founder" class="sidebar-link">Audio background</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="faq-main">
+
+    <!-- TECHNOLOGY -->
+    <div class="faq-category reveal" id="technology">
+      <div class="category-header">
+        <div class="category-icon">⟁</div>
+        <p class="category-title">The technology</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How does the sound steering actually work — can you explain it simply?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Think of a conventional speaker like a floodlight — it throws sound everywhere, in all directions, with no control over where it lands. <strong>Metaxis is a spotlight.</strong> Using an array of speakers working together with precision signal processing, we steer sound beams to specific locations in a space.</p>
+            <p>The technology controls both the horizontal and vertical direction of sound, so it arrives at the listener's position from a specific angle — which also means what you hear matches what you see. There's no mismatch between the source of the sound and the experience of it.</p>
+            <div class="highlight">In simple terms: the sound follows the person, not the other way around. And nobody around them hears it.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How do you stop sound bleeding between zones?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>This is one of the core technical challenges — and one of the key things our R&D phase is focused on solving at scale. The directional beamforming technology is engineered to minimise sound spill between zones by focusing energy precisely on the target area and reducing it everywhere else.</p>
+            <p>The system accounts for the acoustic properties of the space — reflections, reverberation, and room shape — and calibrates accordingly. <strong>Each zone is effectively acoustically isolated</strong>, even though they're running simultaneously in the same room.</p>
+            <p>This is also why the pilot phase matters: we refine the calibration in a real venue with a real audience to make the isolation as clean as possible before we scale.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Has this technology been tested anywhere before?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Directional and spatial audio technology is well-established — it's used in museums, theme parks, automotive systems and immersive entertainment worldwide. Companies like Holosonics and Panphonics have been delivering directional speaker installations for over a decade.</p>
+            <p><strong>What Metaxis brings that doesn't currently exist</strong> is the full-service model: the consultancy, creative direction, multilingual content layer, backend CMS, and ongoing support — all under one roof, built around inclusive design as the primary goal rather than a secondary consideration.</p>
+            <p>Our Phase 1 pilot is specifically designed to prove that this integrated model works in practice, in a real venue, with a real diverse audience.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What hardware does it require and how disruptive is installation?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>The hardware is a speaker array system — typically ceiling or wall-mounted — alongside a processing unit that handles the signal routing and zone management. The exact configuration depends entirely on the size and acoustic profile of the space.</p>
+            <p><strong>Installation disruption is deliberately kept minimal.</strong> We design for spaces that need to keep operating — museums, galleries, cultural venues — so the installation process is planned around the venue's schedule and can typically be completed outside of opening hours.</p>
+            <p>The backend content management system runs separately and can be accessed and updated remotely by venue staff without any technical expertise.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- BUSINESS MODEL -->
+    <div class="faq-category reveal" id="business">
+      <div class="category-header">
+        <div class="category-icon">£</div>
+        <p class="category-title">Business model</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How does Metaxis make money?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Metaxis operates on a <strong>three-stream revenue model</strong>:</p>
+            <p><strong>1. Consultancy & design fee</strong> — paid upfront by the venue for the scoping, creative development and technical planning phase.</p>
+            <p><strong>2. Installation fee</strong> — a one-off project fee covering hardware, build and commissioning.</p>
+            <p><strong>3. Ongoing licensing & support</strong> — a recurring annual or monthly fee for content management, system updates, technical support and access to the backend CMS. This is the long-term revenue engine, and what makes the model scalable.</p>
+            <div class="highlight">As we scale, the licensing model becomes increasingly valuable — venues pay to keep their experience current, and we build a recurring income stream rather than relying on one-off projects.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What does a typical contract look like — one-off fee, subscription, licensing?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>A typical Metaxis contract has two stages. The first is a project contract covering consultancy, content creation and installation — priced based on the scale and complexity of the venue. The second is an ongoing service agreement covering content updates, system maintenance and licensing access.</p>
+            <p><strong>The ongoing agreement is where the business really lives.</strong> It creates a long-term relationship with each venue rather than a transactional one, and it means our revenue grows as our installed base grows — without having to win new projects at the same rate.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          How long does an installation take and what does it cost the venue?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Installation timelines depend on the scale of the space, but a typical single-room installation can be completed within <strong>two to five days</strong>, planned around the venue's operating schedule to minimise disruption.</p>
+            <p>Pricing is bespoke and scoped per venue. During Phase 1 we are working with a pilot partner at a reduced rate in exchange for real-world data, feedback and a case study that validates the model for future commercial contracts.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What happens if a venue wants to change their content?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>This is one of Metaxis's key differentiators. Every installation comes with a <strong>custom backend content management system</strong> that allows venue staff to update, swap and manage their audio content without any technical knowledge — think of it like a simple dashboard.</p>
+            <p>Want to add a new language? Change the audio for a new exhibition? Update the content for a seasonal event? All of this can be done remotely, without any on-site technical visit. The system is designed to keep the experience current and evolving without ongoing cost or complexity for the venue.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACTION -->
+    <div class="faq-category reveal" id="traction">
+      <div class="category-header">
+        <div class="category-icon">↗</div>
+        <p class="category-title">Traction</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Do you have any venues confirmed or committed?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>We are currently in active pilot conversations with venues and developing strong partnerships with R&D collaborators. <strong>These conversations are progressing well</strong> and are a direct result of the network and validation work done during this programme.</p>
+            <p>Phase 1 investment will allow us to formalise these conversations into a confirmed pilot partnership — one real venue, one real audience, one proof of concept. We are not starting from zero; we are starting from a position of informed interest.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why haven't you started yet?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Because doing this properly matters more than doing it quickly. Metaxis is built around the idea that inclusive design requires care, not convenience — and that applies to how we build the business too.</p>
+            <p>The programme period has been used deliberately: <strong>validating the concept, mapping the market gap, building partnerships, and developing the technical framework.</strong> We are not pitching an idea — we are pitching a business that is ready to execute its first phase with the right resource behind it.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What have you done during this programme to validate the idea?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>During the programme we have: mapped the competitive landscape and confirmed the gap in the full-service inclusive audio market; initiated conversations with potential pilot venues and R&D partners; developed the technical specification and content framework; built out the business model with three clear revenue streams; and refined the brand and pitch through multiple rounds of feedback.</p>
+            <p><strong>The result is a business that is technically grounded, commercially structured, and ready to move from validation into execution.</strong></p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPETITION -->
+    <div class="faq-category reveal" id="competition">
+      <div class="category-header">
+        <div class="category-icon">⊕</div>
+        <p class="category-title">Competition</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Who else is doing this and why are you different?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>There are players in adjacent spaces — audio technology companies like Holosonics and Panphonics who make directional speaker hardware; AV integrators who install systems; and accessibility consultants who advise venues. <strong>But nobody is doing all three together, with inclusive design as the founding principle.</strong></p>
+            <p>Consultants don't build. Builders don't consult. Technology companies don't create content or manage ongoing relationships. The market is fragmented, and venues fall through the gaps.</p>
+            <div class="highlight">Metaxis is the only company approaching this as a complete, end-to-end system — from the initial consultation through to content, installation, and long-term management — with belonging, not just accessibility, as the goal.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why couldn't a venue just buy off-the-shelf directional speakers?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>They could — and some do. But buying hardware is only the first step. Without the right calibration for the specific space, without multilingual content created and managed for their audience, without visitor tracking to understand who is walking through the door, and without an ongoing system to keep the experience current — the hardware alone delivers a fraction of the value.</p>
+            <p>It's like buying a camera and expecting a photography studio. <strong>The technology is the enabler. Metaxis is the whole system.</strong></p>
+            <p>Off-the-shelf solutions also typically serve one purpose — directional advertising or single-language audio guides. Metaxis is designed for simultaneous multilingual, multi-zone, personalised experiences — which requires a fundamentally different approach to both the technology and the content layer.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THE ASK -->
+    <div class="faq-category reveal" id="ask">
+      <div class="category-header">
+        <div class="category-icon">◎</div>
+        <p class="category-title">The ask</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why £20,000 specifically?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>The £20,000 is scoped specifically against the deliverables of Phase 1 — a real pilot installation with a real venue and audience. The breakdown is:</p>
+            <div class="highlight">50% R&D — sound steering systems and language technology development<br>20% Pilot installation and venue partnership<br>15% Content creation and CMS build<br>10% Safeguarding, accessibility testing and refinement<br>5% Operations and programme management</div>
+            <p>This is the minimum required to produce a proof of concept that is rigorous enough to open the door to licensing conversations and further investment. It is not a number chosen arbitrarily — it is the cost of doing Phase 1 properly.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What does success look like at the end of Phase 1?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Success at the end of Phase 1 is one venue with a fully operational Metaxis installation, demonstrating simultaneous multilingual audio zones working without devices, with measurable visitor satisfaction and engagement data.</p>
+            <p>More specifically: <strong>visitor feedback confirming the experience of equal access across language groups; venue feedback confirming ease of content management; and quantitative data on zone accuracy and sound isolation</strong> — all packaged as a case study that makes the commercial case for Phase 2 licensing conversations.</p>
+            <p>That case study is the asset. It is what turns the pilot into a template and the template into a scalable licensing model.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What's your route to revenue in year one?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Year one revenue comes from two sources. First, the pilot venue pays a consultancy and installation fee — at a reduced pilot rate in exchange for data and case study rights. Second, the ongoing service agreement begins immediately post-installation, generating the first recurring licensing income.</p>
+            <p><strong>By the end of year one</strong>, the goal is one paying venue on an active service agreement, a published case study, and two to three additional venues in active contract conversations — which becomes the foundation for Phase 2 expansion.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOUNDER -->
+    <div class="faq-category reveal" id="founder">
+      <div class="category-header">
+        <div class="category-icon">✦</div>
+        <p class="category-title">The founder</p>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Why are you the right person to build this?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>Metaxis was built from lived experience — not a market gap spotted on a spreadsheet. I know what it feels like to watch someone you care about be shut out of a space that was supposed to be for everyone. <strong>That's not something you can manufacture as a founder motivation.</strong></p>
+            <p>Beyond the personal, I bring a background in creative technology and immersive experience design — which means I understand both the technical possibilities and the human experience of space. I know how to translate a vision into an installation, and I know how to work with venues as creative collaborators rather than just clients.</p>
+            <p>I'm also backed by senior advisors and specialist collaborators who bring the technical depth and industry relationships that complement my creative and strategic expertise.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          Do you have a technical co-founder or partner?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>I'm currently working with specialist technical collaborators and advisors rather than a named co-founder — which is a deliberate choice at this stage. <strong>The right technical partnership needs to be the right fit for the vision</strong>, not simply the first available.</p>
+            <p>Phase 1 investment includes resource for deepening these technical partnerships — specifically around the R&D work on sound steering and the CMS build — and formalising the advisory structure around the business as it moves from concept to installation.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-question">
+          What's your background in audio technology specifically?
+          <span class="faq-icon">+</span>
+        </button>
+        <div class="faq-answer">
+          <div class="faq-answer-inner">
+            <p>My background is in creative technology and immersive experience design — which means audio has always been a central part of how I think about spatial experience, even if my expertise is more on the experience design side than the pure acoustic engineering side.</p>
+            <p><strong>This is precisely why the partnership model matters.</strong> I bring the vision, the spatial thinking, the inclusive design framework and the ability to translate between technology and human experience. The specialist acoustic and signal processing expertise comes from our technical collaborators — people who have spent careers in directional audio R&D.</p>
+            <p>The combination of those two things — deep technical knowledge and human-centred design thinking — is what makes Metaxis different from both an audio technology company and a design consultancy.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+</div>
+
+<!-- FOOTER CTA -->
+<div class="faq-footer">
+  <h2>Still have<br>questions?</h2>
+  <div>
+    <p>We'd love to talk. Whether you're a venue, an investor, or just curious about what we're building — get in touch and we'll get back to you.</p>
+    <a href="mailto:metaxistudio@gmail.com" class="btn-white">Email us directly</a>
+  </div>
+</div>
+
+<site-footer style="display:flex; background:var(--black); padding:2rem 3rem; justify-content:space-between; align-items:center; border-top:0.5px solid rgba(255,255,255,0.08);">
+  <span class="footer-logo">Metaxis</span>
+  <span class="footer-copy">© 2026 Metaxis Studio. All rights reserved.</span>
+</site-footer>
+
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mouseX = 0, mouseY = 0, ringX = 0, ringY = 0;
+
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    cursor.style.left = mouseX + 'px';
+    cursor.style.top = mouseY + 'px';
+  });
+
+  function animateRing() {
+    ringX += (mouseX - ringX) * 0.12;
+    ringY += (mouseY - ringY) * 0.12;
+    ring.style.left = ringX + 'px';
+    ring.style.top = ringY + 'px';
+    requestAnimationFrame(animateRing);
+  }
+  animateRing();
+
+  const hoverEls = document.querySelectorAll('a, button, .btn-white');
+  hoverEls.forEach(el => {
+    el.addEventListener('mouseenter', () => { cursor.classList.add('hover'); ring.classList.add('hover'); });
+    el.addEventListener('mouseleave', () => { cursor.classList.remove('hover'); ring.classList.remove('hover'); });
+  });
+
+  document.querySelectorAll('.faq-question').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const answer = btn.nextElementSibling;
+      const isOpen = answer.classList.contains('open');
+      document.querySelectorAll('.faq-answer.open').forEach(a => a.classList.remove('open'));
+      document.querySelectorAll('.faq-question.open').forEach(b => b.classList.remove('open'));
+      if (!isOpen) { answer.classList.add('open'); btn.classList.add('open'); }
+    });
+  });
+
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
+  }, { threshold: 0.1 });
+  reveals.forEach(el => observer.observe(el));
+
+  const sidebarLinks = document.querySelectorAll('.sidebar-link');
+  const categories = document.querySelectorAll('.faq-category');
+  const ioSidebar = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const id = e.target.id;
+        sidebarLinks.forEach(l => l.classList.remove('active'));
+        document.querySelectorAll(`.sidebar-link[href="#${id}"]`).forEach(l => l.classList.add('active'));
+      }
+    });
+  }, { threshold: 0.3 });
+  categories.forEach(c => ioSidebar.observe(c));
+</script>
+</body>
+</html>
