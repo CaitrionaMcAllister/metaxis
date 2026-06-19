@@ -130,6 +130,84 @@
 
   .nav-cta::after { display: none !important; }
 
+  /* MOBILE MENU TOGGLE */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    width: 28px;
+    height: 28px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 200;
+  }
+
+  .nav-toggle span {
+    display: block;
+    width: 100%;
+    height: 1.5px;
+    background: var(--white);
+    transition: transform 0.3s ease, opacity 0.3s ease;
+  }
+
+  .nav-toggle.open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .nav-toggle.open span:nth-child(2) { opacity: 0; }
+  .nav-toggle.open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(80vw, 320px);
+    height: 100vh;
+    background: var(--black);
+    border-left: 0.5px solid rgba(255,255,255,0.1);
+    z-index: 150;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem 2.5rem;
+    transform: translateX(100%);
+    transition: transform 0.35s ease;
+  }
+
+  .mobile-menu.open { transform: translateX(0); }
+
+  .mobile-menu a {
+    font-size: 18px;
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 500;
+    transition: color 0.2s, padding-left 0.2s;
+    border-bottom: 0.5px solid rgba(255,255,255,0.08);
+    padding-bottom: 1.25rem;
+  }
+
+  .mobile-menu a:hover { color: var(--orange); padding-left: 6px; }
+
+  .mobile-menu a.mobile-cta {
+    color: var(--orange);
+    border-bottom: none;
+  }
+
+  .menu-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(2px);
+    z-index: 140;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .menu-backdrop.open { opacity: 1; pointer-events: auto; }
+
   /* HERO */
   .hero {
     min-height: 100vh;
@@ -832,6 +910,7 @@
     .cursor, .cursor-ring { display: none; }
     nav { padding: 1rem 1.5rem; }
     .nav-links { display: none; }
+    .nav-toggle { display: flex; }
     section { padding: 4rem 1.5rem; }
     .hook, .origins, .contact, .spotlight-block { grid-template-columns: 1fr; }
     .wwd-grid, .problem-grid, .vision-grid { grid-template-columns: 1fr 1fr; }
@@ -858,7 +937,20 @@
     <li><a href="faq.html">FAQ</a></li>
     <li><a href="#contact" class="nav-cta">Get in touch</a></li>
   </ul>
+  <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<div class="menu-backdrop" id="menuBackdrop"></div>
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#what-we-do">What we do</a>
+  <a href="#problem">The problem</a>
+  <a href="#vision">Vision</a>
+  <a href="#origins">Origins</a>
+  <a href="faq.html">FAQ</a>
+  <a href="#contact" class="mobile-cta">Get in touch ↗</a>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1153,6 +1245,25 @@
     });
   }, { threshold: 0.12 });
   reveals.forEach(el => observer.observe(el));
+
+  const navToggle = document.getElementById('navToggle');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const menuBackdrop = document.getElementById('menuBackdrop');
+
+  function closeMenu() {
+    navToggle.classList.remove('open');
+    mobileMenu.classList.remove('open');
+    menuBackdrop.classList.remove('open');
+  }
+
+  navToggle.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    navToggle.classList.toggle('open', isOpen);
+    menuBackdrop.classList.toggle('open', isOpen);
+  });
+
+  menuBackdrop.addEventListener('click', closeMenu);
+  mobileMenu.querySelectorAll('a').forEach(a => a.addEventListener('click', closeMenu));
 </script>
 </body>
 </html>
